@@ -1,0 +1,132 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+
+
+df = pd.read_csv('filename.csv')       # Load CSV file
+df = pd.read_excel('filename.xlsx')    # Load Excel file
+
+
+df.head()            # First 5 rows
+df.tail()            # Last 5 rows
+df.info()            # Data types & null counts
+df.describe()        # Summary statistics
+df.shape             # Rows & columns
+df.columns           # Column names
+df.index             # Index range
+df.dtypes            # Data types
+df.nunique()         # Unique values per column
+
+
+df.isnull().sum()                 # Count missing values
+df.dropna(inplace=True)          # Drop rows with nulls
+df.fillna(value, inplace=True)   # Fill missing values
+df.duplicated().sum()            # Count duplicates
+df.drop_duplicates(inplace=True) # Remove duplicates
+
+
+df['column'].unique()        # Unique values
+df['column'].value_counts()  # Frequency count
+df.rename(columns={'old': 'new'}, inplace=True)  # Rename column
+df['new_col'] = df['col1'] + df['col2']          # New column
+df.drop('column', axis=1, inplace=True)          # Drop column
+
+
+df[df['col'] > 50]                      # Filter condition
+df[(df['A'] > 10) & (df['B'] < 5)]      # Multiple conditions
+df.loc[5]                               # Row by index
+df.iloc[0:3]                            # Row slice
+
+
+df.groupby('category').mean()        # Group & average
+df.groupby('category').agg(['sum', 'count'])  # Multiple aggregations
+
+
+df.sort_values(by='column', ascending=False)
+
+
+df['gender'] = df['gender'].map({'Male': 0, 'Female': 1})  # Mapping
+pd.get_dummies(df, columns=['category'])                  # One-hot encoding
+
+
+pd.concat([df1, df2])                         # Concatenate vertically
+pd.merge(df1, df2, on='key')                  # SQL-style merge
+
+
+
+
+
+
+sns.countplot(x='column', data=df)
+sns.boxplot(x='category', y='value', data=df)
+sns.heatmap(df.corr(), annot=True)
+df['column'].hist()
+plt.plot(df['column'])
+
+
+ Fill missing values
+# ---------------------------
+df['Age'] = df['Age'].fillna(df['Age'].median())      # Fill missing Age with median
+df['Salary'] = df['Salary'].fillna(df['Salary'].mean())  # Fill missing Salary with mean
+
+
+ Convert Gender to numeric
+# ---------------------------
+df['Gender'] = df['Gender'].map({'Male': 1, 'Female': 2})
+
+
+
+# Fill missing values
+df['Age'] = df['Age'].fillna(df['Age'].median())
+df['Salary'] = df['Salary'].fillna(df['Salary'].mean())
+
+# Remove outliers in Age using IQR
+Q1 = df['Age'].quantile(0.25)
+Q3 = df['Age'].quantile(0.75)
+IQR = Q3 - Q1
+lower = Q1 - 1.5 * IQR
+upper = Q3 + 1.5 * IQR
+df = df[(df['Age'] >= lower) & (df['Age'] <= upper)]
+
+# Convert Gender to numeric
+df['Gender'] = df['Gender'].map({'Male': 1, 'Female': 2})
+
+# ---------------------
+# Matplotlib Visualizations
+# ---------------------
+
+# Bar Chart - Gender Count
+plt.figure(figsize=(6, 4))
+df['Gender'].value_counts().sort_index().plot(kind='bar', color=['blue', 'pink'])
+plt.title('Gender Count')
+plt.xticks([0, 1], ['Male', 'Female'], rotation=0)
+plt.xlabel('Gender')
+plt.ylabel('Count')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Histogram - Age Distribution
+plt.figure(figsize=(6, 4))
+plt.hist(df['Age'], bins=5, color='skyblue', edgecolor='black')
+plt.title('Age Distribution')
+plt.xlabel('Age')
+plt.ylabel('Frequency')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Scatter Plot - Age vs Salary
+plt.figure(figsize=(6, 4))
+plt.scatter(df['Age'], df['Salary'], c=df['Gender'], cmap='coolwarm', edgecolors='black')
+plt.title('Age vs Salary')
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.colorbar(label='Gender (1=Male, 2=Female)')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
