@@ -1,0 +1,5 @@
+start-all.cmd
+hadoop fs -mkdir /input
+hadoop fs -put fileLocation /input
+hadoop jar jarlocation package name/className /input/inputfile /output
+hdfs dfs -get /output/part-r-00000 filepath
